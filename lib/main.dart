@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/cubits/weather_cubit/weather_cubit.dart';
-import 'package:weather_app/screens/home_page.dart';
-import 'package:weather_app/service/service_weather.dart';
+import 'package:weather_app/Bloc/Weather_Cubit/weather_cubit.dart';
+import 'package:weather_app/screens/search_page.dart';
+import 'package:weather_app/Services/weather_service.dart';
 
-import 'models/model_weather.dart';
+import 'screens/home_page.dart';
 
 void main() {
-  runApp(BlocProvider(
-      create: (context) {
-        return WeatherCubit(ServiceWeather());
-      },
+  runApp(BlocProvider<WeatherCubit>(
+      create: (context) => WeatherCubit(WeatherService()),
       child: WeatherApp()));
 }
 
 class WeatherApp extends StatelessWidget {
-  WeatherModel? weather;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,10 +22,14 @@ class WeatherApp extends StatelessWidget {
                 ? Colors.blue
                 : BlocProvider.of<WeatherCubit>(context)
                     .weatherModel!
-                    .getThemeColor(),
+                    .getThemeColors(),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      initialRoute: HomePage.id,
+      routes: {
+        HomePage.id: (_) => HomePage(),
+        SearchPage.id: (_) => SearchPage(),
+      },
     );
   }
 }
